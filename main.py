@@ -567,7 +567,5 @@ def listener(messages):
 bot.set_update_listener(listener)  # register listener
 
 
-
-if __name__ == "__main__":
-    bot.polling()
+bot.polling()
 
