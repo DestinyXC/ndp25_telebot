@@ -1,37 +1,36 @@
-import telebot
-from flask import Flask, request
 import os
+from flask import Flask, request
+import telebot
 
-# Initialize bot with your API token
-TOKEN = os.getenv('BOT_TOKEN')
-bot = telebot.TeleBot(TOKEN)
+# Retrieve the bot token from the environment variable
+BOT_TOKEN = os.getenv('BOT_TOKEN')
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN environment variable is not set!")
 
-# Initialize Flask application
+# Initialize Flask app and Telegram bot
 app = Flask(__name__)
+bot = telebot.TeleBot(BOT_TOKEN)
 
-@bot.message_handler(commands=['start', 'help'])
+# Define a simple command handler
+@bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.reply_to(message, "Welcome! I am your bot.")
+    bot.reply_to(message, "Hello! I'm your bot.")
 
-# Webhook endpoint
-@app.route('/{}'.format(TOKEN), methods=['POST'])
+# Handle incoming webhook updates
+@app.route("/", methods=["POST"])
 def webhook():
-    json_str = request.get_data().decode('UTF-8')
-    update = telebot.types.Update.de_json(json_str)
-    bot.process_new_updates([update])
-    return '', 200
+    if request.headers.get("content-type") == "application/json":
+        json_string = request.get_data().decode("utf-8")
+        update = telebot.types.Update.de_json(json_string)
+        bot.process_new_updates([update])
+        return "OK", 200
+    else:
+        return "Unsupported Media Type", 415
 
-@app.route('/')
-def index():
-    return "Hello, I'm running on Render!"
-
-# Set the webhook for Telegram
-def set_webhook():
-    webhook_url = f'https://ndp25_telebot.onrender.com/{TOKEN}'
-    bot.remove_webhook()
-    bot.set_webhook(url=webhook_url)
-
+# Set the webhook URL when the app starts
 if __name__ == "__main__":
-    # Call the function to set the webhook
-    set_webhook()
-    app.run(host='0.0.0.0', port=5000)
+    # Remove any existing webhook
+    bot.remove_webhook()
+    # Set the webhook to your Render service's URL
+    bot.set_webhook(url="https://ndp25_telebot.onrender.com/")
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
