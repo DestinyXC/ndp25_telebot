@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BOT_TOKEN = 'BOT_TOKEN'
+BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 ADMIN_CHAT_ID = 878332131
 
