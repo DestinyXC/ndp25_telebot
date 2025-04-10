@@ -32,5 +32,5 @@ if __name__ == "__main__":
     # Remove any existing webhook
     bot.remove_webhook()
     # Set the webhook to your Render service's URL
-    bot.set_webhook(url="https://ndp25_telebot.onrender.com/")
+    bot.set_webhook(url="https://ndp25_telebot.onrender.com/7857517263:AAEKGJodf5GxBTW_WV-mWOgOnvwXzRMQM6I")
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
