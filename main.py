@@ -568,5 +568,6 @@ bot.set_update_listener(listener)  # register listener
 
 
 
-bot.infinity_polling()
+if __name__ == "__main__":
+    bot.polling()
 
