@@ -27,7 +27,7 @@ def index():
 
 # Set the webhook for Telegram
 def set_webhook():
-    webhook_url = f'https://<your-app-name>.onrender.com/{TOKEN}'
+    webhook_url = f'https://ndp25_telebot.onrender.com/{TOKEN}'
     bot.remove_webhook()
     bot.set_webhook(url=webhook_url)
 
