@@ -570,15 +570,37 @@ bot.set_update_listener(listener)  # register listener
 
 
 # Handle incoming webhook updates
+processed_updates = set()
+
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    # Read the update from the request
-    json_data = request.stream.read().decode("utf-8")
-    update = telebot.types.Update.de_json(json_data)
-    
-    # Process all updates
-    bot.process_new_updates([update])
-    return "OK"
+    try:
+        json_data = request.get_json(force=True)
+        update = telebot.types.Update.de_json(json_data)
+
+        # Check if the update has already been processed
+        if update.update_id in processed_updates:
+            return "OK"
+
+        # Mark the update as processed
+        processed_updates.add(update.update_id)
+
+        # Process the update
+        bot.process_new_updates([update])
+        return "OK"
+    except Exception as e:
+        print("Error processing update:", str(e))
+        return "ERROR", 500
+
+import threading
+
+def clear_processed_updates():
+    global processed_updates
+    while True:
+        processed_updates.clear()
+        time.sleep(3600)  # Clear every hour
+
+threading.Thread(target=clear_processed_updates, daemon=True).start()
 
 # Set the webhook URL when the app starts
 if __name__ == "__main__":
