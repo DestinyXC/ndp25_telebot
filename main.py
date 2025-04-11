@@ -570,20 +570,20 @@ bot.set_update_listener(listener)  # register listener
 
 
 # Handle incoming webhook updates
-@app.route("/", methods=["POST"])
+@app.route("/webhook", methods=["POST"])
 def webhook():
-    if request.headers.get("content-type") == "application/json":
-        json_string = request.get_data().decode("utf-8")
-        update = telebot.types.Update.de_json(json_string)
-        bot.process_new_updates([update])
-        return "OK", 200
-    else:
-        return "Unsupported Media Type", 415
+    # Read the update from the request
+    json_data = request.stream.read().decode("utf-8")
+    update = telebot.types.Update.de_json(json_data)
+    
+    # Process all updates
+    bot.process_new_updates([update])
+    return "OK"
 
 # Set the webhook URL when the app starts
 if __name__ == "__main__":
     # Remove any existing webhook
     bot.remove_webhook()
     # Set the webhook to your Render service's URL
-    bot.set_webhook(url="https://ndp25-telebot.onrender.com/")
+    bot.set_webhook(url="https://ndp25-telebot.onrender.com/webhook")
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
