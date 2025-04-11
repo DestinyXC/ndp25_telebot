@@ -576,6 +576,7 @@ processed_updates = set()
 def webhook():
     try:
         json_data = request.get_json(force=True)
+        print("Received update:", json_data)
         update = telebot.types.Update.de_json(json_data)
 
         # Check if the update has already been processed
