@@ -35,9 +35,9 @@ def send_welcome(message):
         chat_id = message.chat.id
         print(chat_id)
         print(id_list)
-        #for i in id_list:
-        if str(chat_id) not in id_list:
-            msg = bot.send_message(message.chat.id, '''
+        for i in id_list:
+            if str(chat_id) != i:
+                msg = bot.send_message(message.chat.id, '''
 Greetings! Welcome to NDP 2025 InfoBot!
 My name is Thomas and I will be assisting you today.
 
