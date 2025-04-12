@@ -174,6 +174,22 @@ def choose_school(message):
             time.sleep(1)
             school = bot.send_message(chat_id, "What school are you from? Please select a school in the markup provided.")
             bot.register_next_step_handler(school, phone_number)
+        elif date == "06/07/25":
+            markup = types.ReplyKeyboardMarkup(row_width=1)
+            itembtn73 = types.KeyboardButton('placeholder school')
+            markup.add(itembtn73)
+            bot.send_message(chat_id, "Please wait as the options load. Thank you!", reply_markup=markup)
+            time.sleep(1)
+            school = bot.send_message(chat_id, "What school are you from? Please select a school in the markup provided.")
+            bot.register_next_step_handler(school, phone_number)
+        elif date == "29/06/25":
+            markup = types.ReplyKeyboardMarkup(row_width=1)
+            itembtn74 = types.KeyboardButton('placeholder school')
+            markup.add(itembtn74)
+            bot.send_message(chat_id, "Please wait as the options load. Thank you!", reply_markup=markup)
+            time.sleep(1)
+            school = bot.send_message(chat_id, "What school are you from? Please select a school in the markup provided.")
+            bot.register_next_step_handler(school, phone_number)
         else:
             pass
         #bot.register_next_step_handler(msg, process_age_step)
