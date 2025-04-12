@@ -2,7 +2,7 @@ import os
 import time
 
 import telebot
-from flask import Flask, request
+#from flask import Flask, request
 from telebot import types
 from dotenv import load_dotenv
 
@@ -13,7 +13,7 @@ BOT_TOKEN = "7857517263:AAEKGJodf5GxBTW_WV-mWOgOnvwXzRMQM6I"
 ADMIN_CHAT_ID = 878332131
 
 bot = telebot.TeleBot(BOT_TOKEN)
-app = Flask(__name__)
+#app = Flask(__name__)
 
 user_list = []
 chat_dict = {}
@@ -570,9 +570,9 @@ bot.set_update_listener(listener)  # register listener
 
 
 # Handle incoming webhook updates
-processed_updates = set()
+#processed_updates = set()
 
-@app.route("/webhook", methods=["POST"])
+'''@app.route("/webhook", methods=["POST"])
 def webhook():
     try:
         json_data = request.get_json(force=True)
@@ -609,4 +609,7 @@ if __name__ == "__main__":
     bot.remove_webhook()
     # Set the webhook to your Render service's URL
     bot.set_webhook(url="https://ndp25-telebot.onrender.com/webhook")
-    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))'''
+
+bot.remove_webhook()
+bot.infinity_polling()
