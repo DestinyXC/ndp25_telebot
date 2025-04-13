@@ -218,7 +218,7 @@ def validate_number(message):
             return
         chat_dict.setdefault("Phone Number", []).extend([text])
         chat_dict.setdefault("ID", []).extend([chat_id])
-        print(chat_dict)
+        #print(chat_dict)
         if len(nested_list) > 0:
             nested_list.clear()
             for val in chat_dict.values():
