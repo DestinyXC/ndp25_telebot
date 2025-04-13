@@ -1,8 +1,9 @@
 import os
 import time
+import re
 
 import telebot
-from flask import Flask, request
+#from flask import Flask, request
 from telebot import types
 from dotenv import load_dotenv
 
@@ -13,7 +14,7 @@ BOT_TOKEN = "7857517263:AAEKGJodf5GxBTW_WV-mWOgOnvwXzRMQM6I"
 ADMIN_CHAT_ID = 878332131
 
 bot = telebot.TeleBot(BOT_TOKEN)
-app = Flask(__name__)
+#app = Flask(__name__)
 
 user_list = []
 chat_dict = {}
@@ -35,8 +36,9 @@ def send_welcome(message):
         chat_id = message.chat.id
         print(chat_id)
         print(id_list)
-        #for i in id_list:
-        if str(chat_id) not in id_list:
+        if str(chat_id) in id_list:
+            bot.send_message(chat_id, "You have registered before, please use /help for aid. Thank you.")
+        else:
             msg = bot.send_message(message.chat.id, '''
 Greetings! Welcome to NDP 2025 InfoBot!
 My name is Thomas and I will be assisting you today.
@@ -49,8 +51,6 @@ Please wait for the bot to respond. DO NOT spam the bot with /start. If it does 
 Please note that the information can change anytime, do confirm the information with your ALP as well.
         ''')
             bot.register_next_step_handler(msg, ndp_show_date)
-        else:
-            bot.send_message(chat_id, "You have registered before, please use /help for aid. Thank you.")
     except Exception as e:
         bot.reply_to(message, 'Something went wrong, please try again.')
 
@@ -92,7 +92,7 @@ def choose_school(message):
         date = message.text
         chat_dict.setdefault("Show Date", []).extend([date])
         #print(text)
-        print(type(date))
+        #print(type(date))
         if date == "13/07/25":
             markup = types.ReplyKeyboardMarkup(row_width=1)
             itembtn1 = types.KeyboardButton('ADMIRALTY PRIMARY SCHOOL')
@@ -174,6 +174,22 @@ def choose_school(message):
             time.sleep(1)
             school = bot.send_message(chat_id, "What school are you from? Please select a school in the markup provided.")
             bot.register_next_step_handler(school, phone_number)
+        elif date == "06/07/25":
+            markup = types.ReplyKeyboardMarkup(row_width=1)
+            itembtn73 = types.KeyboardButton('placeholder school')
+            markup.add(itembtn73)
+            bot.send_message(chat_id, "Please wait as the options load. Thank you!", reply_markup=markup)
+            time.sleep(1)
+            school = bot.send_message(chat_id, "What school are you from? Please select a school in the markup provided.")
+            bot.register_next_step_handler(school, phone_number)
+        elif date == "29/06/25":
+            markup = types.ReplyKeyboardMarkup(row_width=1)
+            itembtn74 = types.KeyboardButton('placeholder school')
+            markup.add(itembtn74)
+            bot.send_message(chat_id, "Please wait as the options load. Thank you!", reply_markup=markup)
+            time.sleep(1)
+            school = bot.send_message(chat_id, "What school are you from? Please select a school in the markup provided.")
+            bot.register_next_step_handler(school, phone_number)
         else:
             pass
         #bot.register_next_step_handler(msg, process_age_step)
@@ -196,11 +212,11 @@ def validate_number(message):
     try:
         chat_id = message.chat.id
         text = message.text
-        chat_dict.setdefault("Phone Number", []).extend([text])
         if not((text.isdigit() and len(text) == 8) and (text[0] == "8" or text[0] == "9")):
             msg = bot.send_message(chat_id, "Please enter a valid phone number. Example: 81234567 or 91234567\nPlease send your phone number again!")
             bot.register_next_step_handler(msg, validate_number)
             return
+        chat_dict.setdefault("Phone Number", []).extend([text])
         chat_dict.setdefault("ID", []).extend([chat_id])
         print(chat_dict)
         if len(nested_list) > 0:
@@ -213,12 +229,21 @@ def validate_number(message):
         #print(nested_list)
         id = nested_list[4]
         nested_list2 = ( ", ".join( repr(e) for e in id ) )
+        #nested_list2 = nested_list2[0].split(',')
         if len(id_list) > 0:
             id_list.clear()
             id_list.append(nested_list2)
         else:
             id_list.append(nested_list2)
-        print(id_list)
+        #print(id_list)
+        for string in id_list:
+            if len(string) > 10:
+                s = id_list[0]
+                parts = [part.strip()for part in s.split(",")]
+                id_list.clear()
+                for i in parts:
+                    id_list.append(i)
+                print(id_list)
         list_ID = chat_dict["ID"]
         list_name = chat_dict["Name"]
         list_school = chat_dict["School"]
@@ -483,7 +508,7 @@ def process_info(message):
                 index = list_ID.index(i)
         if (text.title() == "Quit" or text.lower() == "quit") or (text.upper() == "QUIT"):
             bot.reply_to(message, "Successfully exited /info.\nUse /help for more assistance.")
-            bot.edit_message_reply_markup(chat_id, message_id=message.message_id - 1, reply_markup=None)
+            #bot.edit_message_reply_markup(chat_id, message_id=message.message_id - 1, reply_markup=None)
         elif text.lower() == "ne show no.":
             if list_date[index] == "29/06/25":
                 bot.send_message(chat_id, "Your NE show no. is 1")
@@ -570,9 +595,9 @@ bot.set_update_listener(listener)  # register listener
 
 
 # Handle incoming webhook updates
-processed_updates = set()
+#processed_updates = set()
 
-@app.route("/webhook", methods=["POST"])
+'''@app.route("/webhook", methods=["POST"])
 def webhook():
     try:
         json_data = request.get_json(force=True)
@@ -609,4 +634,7 @@ if __name__ == "__main__":
     bot.remove_webhook()
     # Set the webhook to your Render service's URL
     bot.set_webhook(url="https://ndp25-telebot.onrender.com/webhook")
-    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))'''
+
+bot.remove_webhook()
+bot.infinity_polling()
