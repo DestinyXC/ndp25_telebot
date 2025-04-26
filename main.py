@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BOT_TOKEN = "7857517263:AAEKGJodf5GxBTW_WV-mWOgOnvwXzRMQM6I"
+BOT_TOKEN = ""
 
 ADMIN_CHAT_ID = 878332131
 
